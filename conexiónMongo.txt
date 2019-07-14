@@ -1,4 +1,0 @@
-MONGO
-user: noe
-password: 8GOUWrQE5PqnyZzm
-mongodb+srv://noe:8GOUWrQE5PqnyZzm@mflix-gjykd.mongodb.net/mflix
