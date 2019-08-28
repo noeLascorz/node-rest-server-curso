@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken')
 
+let Categoria = require('../models/categoria')
+
 // ================
 // Verificar Token
 // ================
@@ -25,9 +27,8 @@ let verificaToken = (req, res, next) => {
 
 
 // =====================
-// Verfifica ADMIN_ROLE
+// Verifica ADMIN_ROLE
 // =====================
-
 let verificaAdminRole = (req, res, next) => {
     let usuario = req.usuario
 
@@ -41,12 +42,40 @@ let verificaAdminRole = (req, res, next) => {
             }
         })
     }
+}
 
+// ==========================
+// Verifica categoria
+// ==========================
+let verificaCategoria = (req, res, next) => {
+    let descCategoria = req.body.descCategoria
 
+    Categoria.findOne({ descripcion: descCategoria })
+        .exec((err, categoriaDB) => {
+            if (err) {
+                res.json({
+                    ok: false,
+                    err: {
+                        message: 'Error al obtener las categorias'
+                    }
+                })
+            } else if (!categoriaDB) {
+                res.json({
+                    ok: false,
+                    err: {
+                        message: `La categoria ${descCategoria} no esta definida`
+                    }
+                })
+            } else {
+                req.categoriaId = categoriaDB._id
+                next();
+            }
+        })
 }
 
 
 module.exports = {
     verificaToken,
-    verificaAdminRole
+    verificaAdminRole,
+    verificaCategoria
 }
