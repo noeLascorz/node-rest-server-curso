@@ -73,9 +73,31 @@ let verificaCategoria = (req, res, next) => {
         })
 }
 
+// ==========================
+// Verifica token para imagen
+// ==========================
+let verificaTokenImg = (req, res, next) => {
+    let token = req.query.token;
+    jwt.verify(token, process.env.NODE_ENV, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                ok: false,
+                err: {
+                    message: 'Token no válido'
+                }
+            })
+        }
+
+        req.usuario = decoded.usuario
+        next()
+    })
+
+}
+
 
 module.exports = {
     verificaToken,
     verificaAdminRole,
-    verificaCategoria
+    verificaCategoria,
+    verificaTokenImg
 }
